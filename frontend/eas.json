@@ -1,3 +1,30 @@
-// File: frontend/eas.json
-
-export default function placeholder() { return null; }
+{
+  "cli": {
+    "version": ">= 5.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "distribution": "store"
+    },
+    "android": {
+      "release": {
+        "buildType": "apk"
+      }
+    },
+    "ios": {
+      "release": {
+        "buildType": "ipa"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
