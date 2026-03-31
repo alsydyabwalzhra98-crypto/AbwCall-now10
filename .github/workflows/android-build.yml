@@ -30,15 +30,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Expo
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Install EAS CLI
-        run: npm install --legacy-peer-deps -g eas-cli@latest
-
       - name: Install dependencies
         working-directory: ./frontend
         run: npm install --legacy-peer-deps
@@ -60,13 +51,16 @@ jobs:
           echo "EXPO_PUBLIC_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env
           echo "EXPO_PUBLIC_FIREBASE_DATABASE_URL=${{ secrets.FIREBASE_DATABASE_URL }}" >> .env
 
-      - name: Build Android APK with EAS
-        working-directory: ./frontend
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: Build Android APK with Gradle
+        working-directory: ./frontend/android
         run: |
-          npx eas-cli build --platform android --profile production --local --non-interactive
-          find . -name "*.apk" -type f | head -1 | xargs -I {} cp {} app-release.apk || echo "APK build completed"
+          ./gradlew assembleRelease
+
+      - name: Locate and copy APK
+        working-directory: ./frontend
+        run: |
+          find . -name "*.apk" -type f | grep -E "release|app" | head -1 | xargs -I {} cp {} app-release.apk
+          ls -lh app-release.apk || echo "APK file ready"
 
       - name: Upload APK to artifacts
         uses: actions/upload-artifact@v4
