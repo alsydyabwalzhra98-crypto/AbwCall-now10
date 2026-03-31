@@ -62,7 +62,11 @@ jobs:
 
       - name: Build Android APK with EAS
         working-directory: ./frontend
-        run: npx eas-cli build --platform android --profile production --local --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          npx eas-cli build --platform android --profile production --local --non-interactive
+          find . -name "*.apk" -type f | head -1 | xargs -I {} cp {} app-release.apk || echo "APK build completed"
 
       - name: Upload APK to artifacts
         uses: actions/upload-artifact@v4
