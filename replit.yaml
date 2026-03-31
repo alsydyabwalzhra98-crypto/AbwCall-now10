@@ -1,0 +1,8 @@
+modules:
+  - name: expo-app
+    language: javascript
+run: npm start
+entrypoint: npm start
+hidden:
+  - .expo
+  - node_modules
