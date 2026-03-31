@@ -1,3 +1,14 @@
-// File: backend/app/schemas/payment.py
+from typing import Optional
+from pydantic import BaseModel
 
-export default function placeholder() { return null; }
+
+class PaymentIntentCreate(BaseModel):
+    amount: float
+    payment_method_id: Optional[str] = None
+
+
+class PaymentIntentResponse(BaseModel):
+    client_secret: str
+    payment_intent_id: str
+    amount: float
+    currency: str = "usd"

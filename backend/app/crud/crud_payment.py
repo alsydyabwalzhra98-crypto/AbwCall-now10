@@ -1,3 +1,1 @@
-// File: backend/app/crud/crud_payment.py
-
-export default function placeholder() { return null; }
+# Payment processing is handled through TransactionCRUD and PaymentService

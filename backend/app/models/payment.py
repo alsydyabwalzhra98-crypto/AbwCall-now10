@@ -1,3 +1,1 @@
-// File: backend/app/models/payment.py
-
-export default function placeholder() { return null; }
+# Payment model is handled by the Transaction model

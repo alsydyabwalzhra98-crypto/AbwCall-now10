@@ -1,3 +1,17 @@
-// File: backend/app/models/contact.py
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 
-export default function placeholder() { return null; }
+from app.db.base import BaseModel
+
+
+class Contact(BaseModel):
+    __tablename__ = "contacts"
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    name = Column(String, nullable=False)
+    phone = Column(String, nullable=False)
+    email = Column(String)
+    is_favorite = Column(Boolean, default=False)
+    avatar_url = Column(String)
+
+    user = relationship("User", back_populates="contacts")
