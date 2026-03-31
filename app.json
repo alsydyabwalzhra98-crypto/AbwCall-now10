@@ -10,9 +10,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#007AFF"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -38,32 +35,20 @@
       ]
     },
     "web": {
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
-      "expo-font",
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
-        }
-      ],
-      [
-        "expo-microphone",
-        {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
-        }
-      ],
-      [
-        "expo-contacts",
-        {
-          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts"
-        }
-      ]
+      "expo-router",
+      "expo-font"
     ],
+    "scheme": "abu-alzahra-voip",
     "extra": {
       "eas": {
         "projectId": "your-project-id"
+      },
+      "router": {
+        "origin": false
       }
     }
   }
