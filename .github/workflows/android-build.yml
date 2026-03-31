@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,12 +23,16 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Install dependencies
         working-directory: ./frontend
@@ -37,7 +41,6 @@ jobs:
       - name: Update API configuration
         working-directory: ./frontend
         run: |
-          # Update .env with production server URL
           echo "EXPO_PUBLIC_API_URL=http://abualzahracom.online:8000/api" > .env
           echo "EXPO_PUBLIC_WEBSOCKET_URL=wss://abualzahracom.online:8000/ws" >> .env
           echo "EXPO_PUBLIC_TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
@@ -51,29 +54,35 @@ jobs:
           echo "EXPO_PUBLIC_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env
           echo "EXPO_PUBLIC_FIREBASE_DATABASE_URL=${{ secrets.FIREBASE_DATABASE_URL }}" >> .env
 
+      - name: Make Gradle executable
+        run: chmod +x ./frontend/android/gradlew
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Build Android APK with Gradle
         working-directory: ./frontend/android
-        run: |
-          ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --no-daemon
 
-      - name: Locate and copy APK
-        working-directory: ./frontend
-        run: |
-          find . -name "*.apk" -type f | grep -E "release|app" | head -1 | xargs -I {} cp {} app-release.apk
-          ls -lh app-release.apk || echo "APK file ready"
-
-      - name: Upload APK to artifacts
+      - name: Locate and upload APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: ./frontend/app-release.apk
+          path: frontend/android/app/build/outputs/apk/release/app-release.apk
           retention-days: 30
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
-          files: ./frontend/app-release.apk
+          files: frontend/android/app/build/outputs/apk/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
