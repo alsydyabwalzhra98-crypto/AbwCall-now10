@@ -1,33 +1,12 @@
 {
   "cli": {
-    "version": ">= 5.0.0"
+    "version": ">= 3.0.0"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {
-      "distribution": "internal",
+    "release": {
       "android": {
         "buildType": "apk"
       }
-    },
-    "android": {
-      "release": {
-        "buildType": "apk"
-      }
-    },
-    "ios": {
-      "release": {
-        "buildType": "ipa"
-      }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }
