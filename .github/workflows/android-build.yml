@@ -62,8 +62,7 @@ jobs:
 
       - name: Build Android APK with EAS
         working-directory: ./frontend
-        run: |
-          eas build --platform android --non-interactive --output=app-release.apk
+        run: npx eas-cli build --platform android --profile production --local --non-interactive
 
       - name: Upload APK to artifacts
         uses: actions/upload-artifact@v4
