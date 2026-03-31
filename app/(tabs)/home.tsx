@@ -2,10 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SIZES } from '../../constants/index';
+import { useAuth } from '../../hooks/useAuth';
+import { COLORS, SIZES } from '../../constants';
+import { WalletCard } from '../../components/WalletCard';
+import { PhoneNumberInput } from '../../components/PhoneNumberInput';
+import { RateDisplay } from '../../components/RateDisplay';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+
+  const handleMakeCall = (phoneNumber: string) => {
+    router.push(`/call/${phoneNumber}`);
+  };
 
   const quickActions = [
     {
@@ -37,10 +46,18 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
-        <Text style={styles.welcome}>مرحباً، المستخدم</Text>
+        <Text style={styles.welcome}>مرحباً، {user?.name || 'المستخدم'}</Text>
         <TouchableOpacity style={styles.profileButton}>
           <Ionicons name="person-circle" size={40} color={COLORS.primary} />
         </TouchableOpacity>
+      </View>
+
+      <WalletCard />
+
+      <View style={styles.callSection}>
+        <Text style={styles.sectionTitle}>إجراء مكالمة</Text>
+        <PhoneNumberInput onSubmit={handleMakeCall} />
+        <RateDisplay />
       </View>
 
       <View style={styles.actionsSection}>
@@ -82,6 +99,23 @@ const styles = StyleSheet.create({
   },
   profileButton: {
     padding: 4,
+  },
+  callSection: {
+    backgroundColor: COLORS.white,
+    margin: SIZES.padding,
+    padding: SIZES.padding,
+    borderRadius: SIZES.radius,
+    shadowColor: COLORS.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  sectionTitle: {
+    fontSize: SIZES.h3,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    marginBottom: SIZES.padding,
   },
   actionsSection: {
     padding: SIZES.padding,
