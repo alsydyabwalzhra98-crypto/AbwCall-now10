@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AbwZahraApp",
-    "slug": "abu-alzahra",
+    "name": "AbwCallNow",
+    "slug": "abwcallnow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
